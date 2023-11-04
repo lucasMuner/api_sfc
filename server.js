@@ -9,7 +9,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-     origin: 'https://sfc-project.vercel.app/monitoramento.html',
+     origin: 'https://sfc-project.vercel.app',
   },
 });
 const port = 3000; 
