@@ -7,11 +7,15 @@ const socketIo = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
 const port = 3000; 
-app.use(cors({ origin: 'http://sfc-project.vercel.app' }));
+app.use(cors());
 app.use(express.json());
+const io = socketIo(server, {
+  cors : {
+    origin : "http://sfc-project.vercel.app"
+  }
 
+});
 
 // Conectar ao MongoDB
 const uri = "mongodb+srv://roottop:NXzero321@sfc.ems7t7s.mongodb.net/?retryWrites=true&w=majority";
