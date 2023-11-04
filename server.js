@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 const io = socketIo(server, {
   cors : {
-    origin : "http://sfc-project.vercel.app"
+    origin : "https://sfc-project.vercel.app"
   }
 
 });
