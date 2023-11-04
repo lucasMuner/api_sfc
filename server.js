@@ -9,7 +9,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 const port = 3000; 
-app.use(cors());
+app.use(cors({ origin: 'http://sfc-project.vercel.app' }));
 app.use(express.json());
 
 
