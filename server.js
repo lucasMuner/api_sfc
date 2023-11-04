@@ -15,6 +15,11 @@ const io = socketIo(server, {
 const port = 3000; 
 app.use(cors());
 app.use(express.json());
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://sfc-project.vercel.app');
+  // Outros cabeçalhos CORS podem ser configurados, conforme necessário
+  next();
+});
 
 
 // Conectar ao MongoDB
@@ -127,6 +132,8 @@ app.put('/atualizar-dado', async (req, res) => {
 });*/
 
 // Iniciar a conexão com o MongoDB
+
+
 
 
 io.on('connection', (socket) => {
