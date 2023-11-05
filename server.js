@@ -48,7 +48,7 @@ app.get('/dados', async (req, res) => {
   }
 });
 
-/*app.put('/atualizar-dado', async (req, res) => {
+app.put('/atualizar-dado', async (req, res) => {
   try {
     const setTemperatura = req.params.setPointTemperatura; // Obtenha o valor de temperatura dos parâmetros da URL
     const novoValor = req.body.novoValor;// Substitua isso pelo novo valor que você deseja definir
@@ -72,7 +72,7 @@ app.get('/dados', async (req, res) => {
     console.error('Ocorreu um erro ao atualizar o dado:', error);
     res.status(500).json({ erro: 'Ocorreu um erro ao atualizar o dado' });
   }
-});*/
+});
 
 
 app.put('/atualizar-dado', async (req, res) => {
