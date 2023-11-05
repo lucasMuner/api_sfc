@@ -3,19 +3,14 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const { ObjectId } = require('mongodb');
 const cors = require('cors');
 const http = require('http');
-const socketIo = require('socket.io');
+//const socketIo = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
 const port = 3000; 
 app.use(cors());
 app.use(express.json());
-const io = socketIo(server, {
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT'],
-  }
-});
+
 
 // Conectar ao MongoDB
 const uri = "mongodb+srv://roottop:NXzero321@sfc.ems7t7s.mongodb.net/?retryWrites=true&w=majority";
@@ -79,7 +74,7 @@ app.get('/dados', async (req, res) => {
   }
 });*/
 
-// ...
+
 app.put('/atualizar-dado', async (req, res) => {
   try {
     const newSetPoints = req.body; // Obtenha os novos valores dos campos de set points do corpo da solicitação
@@ -101,34 +96,7 @@ app.put('/atualizar-dado', async (req, res) => {
 });
 // ...
 
-/*app.post('/atualizar-dado/:id', async (req, res) => {
-  try {
-    const id = req.params.id; // ID do documento a ser atualizado
-    const novosValores = req.body; // Novos valores a serem definidos
-    console.log(id);
-
-    const database = client.db('test');
-    const collection = database.collection('test');
-
-    // Atualize o documento no MongoDB usando o ID fornecido na URL
-    const filter = { _id: ObjectID(id) };
-    const updateDoc = {
-      $set: novosValores
-    };
-    await collection.updateOne(filter, updateDoc);
-
-    res.status(200).json({ mensagem: 'Documento atualizado com sucesso' });
-  } catch (error) {
-    console.error('Ocorreu um erro ao atualizar o documento:', error);
-    res.status(500).json({ erro: 'Ocorreu um erro ao atualizar o documento' });
-  }
-});*/
-
-// Iniciar a conexão com o MongoDB
-
-
-
-io.on('connection', (socket) => {
+/*io.on('connection', (socket) => {
   console.log('Cliente WebSocket conectado');
 
   const database = client.db('test');
@@ -154,5 +122,7 @@ io.on('connection', (socket) => {
 
 server.listen(port, () => {
   console.log(`Servidor Express em execução na porta ${port}`);
+});*/
+server.listen(port, () => {
+  console.log(`Servidor Express em execução na porta ${port}`);
 });
-  
