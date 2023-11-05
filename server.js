@@ -67,7 +67,7 @@ app.put('/atualizar-set', async (req, res) => {
       { $set: { setPointTemperatura: novoValor } } // Defina o novo valor da temperatura
     );
 
-    res.status(200).json({ mensagem: 'Dado atualizado com sucesso' });
+    res.status(200).json({ mensagem: 'Set-Point alterado com sucesso' });
   } catch (error) {
     console.error('Ocorreu um erro ao atualizar o dado:', error);
     res.status(500).json({ erro: 'Ocorreu um erro ao atualizar o dado' });
