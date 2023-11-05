@@ -77,23 +77,30 @@ app.get('/dados', async (req, res) => {
 
 app.put('/atualizar-dado', async (req, res) => {
   try {
-    const newSetPoints = req.body; // Obtenha os novos valores dos campos de set points do corpo da solicitação
+    const newSensorData = req.body; // Obtenha os novos valores de umidade, luminosidade e temperatura do corpo da solicitação
 
     const database = client.db('test');
     const collection = database.collection('test');
 
     // Atualize o documento no MongoDB usando o ID fornecido
     await collection.updateOne(
-      { _id: new ObjectId("6519ff35e98731875d3c7e89") }, // Filtre pelo ID do set point
-      { $set: newSetPoints } // Defina os novos valores dos campos de set points
+      { _id: new ObjectId("6519ff35e98731875d3c7e89") }, // Filtre pelo ID do documento que você deseja atualizar
+      {
+        $set: {
+          umidade: newSensorData.umidade,
+          luminosidade: newSensorData.luminosidade,
+          temperatura: newSensorData.temperatura
+        }
+      }
     );
 
-    res.status(200).json({ mensagem: 'Dados atualizados com sucesso' });
+    res.status(200).json({ mensagem: 'Dados de sensores atualizados com sucesso' });
   } catch (error) {
-    console.error('Ocorreu um erro ao atualizar os dados:', error);
-    res.status(500).json({ erro: 'Ocorreu um erro ao atualizar os dados' });
+    console.error('Ocorreu um erro ao atualizar os dados dos sensores:', error);
+    res.status(500).json({ erro: 'Ocorreu um erro ao atualizar os dados dos sensores' });
   }
 });
+
 // ...
 
 /*io.on('connection', (socket) => {
