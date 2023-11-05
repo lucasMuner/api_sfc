@@ -48,7 +48,7 @@ app.get('/dados', async (req, res) => {
   }
 });
 
-app.put('/atualizar-dado', async (req, res) => {
+app.put('/atualizar-set', async (req, res) => {
   try {
     const setTemperatura = req.params.setPointTemperatura; // Obtenha o valor de temperatura dos parâmetros da URL
     const novoValor = req.body.novoValor;// Substitua isso pelo novo valor que você deseja definir
