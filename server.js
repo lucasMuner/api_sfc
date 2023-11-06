@@ -50,21 +50,20 @@ app.get('/dados', async (req, res) => {
 
 app.put('/atualizar-set', async (req, res) => {
   try {
-    const setTemperatura = req.params.setPointTemperatura; // Obtenha o valor de temperatura dos parâmetros da URL
-    const novoValor = req.body.novoValor;// Substitua isso pelo novo valor que você deseja definir
-    
-    console.log(setTemperatura);
-    console.log(novoValor);
-    // Conecte-se ao banco de dados
-    
+    const novoValor = req.body;
 
+    console.log(novoValor);
     const database = client.db('test');
     const collection = database.collection('test');
 
     // Atualize o dado no MongoDB usando o valor da temperatura fornecido na URL
     await collection.updateOne(
-      { setPointTemperatura: setTemperatura }, // Filtre pelo valor antigo da temperatura
-      { $set: { setPointTemperatura: novoValor } } // Defina o novo valor da temperatura
+      { _id: new ObjectId("6519ff35e98731875d3c7e89") }, // Filtre pelo ID do documento que você deseja atualizar
+      {
+        $set: {
+          setPointTemperatura: novoValor.setPointTemperatura,
+        }
+      }
     );
 
     res.status(200).json({ mensagem: 'Set-Point alterado com sucesso' });
