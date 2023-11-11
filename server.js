@@ -56,16 +56,29 @@ app.put('/atualizar-set', async (req, res) => {
     const database = client.db('test');
     const collection = database.collection('test');
 
+    let set = {}
+
+    if(novoValor.setPointTemperatura === ""){
+        set = {
+          $set: {
+            lampadaLigada: novoValor.lampadaLigada,
+            resetarEsp: novoValor.resetarEsp
+          }
+        }
+    }else{
+        set = {
+          $set: {
+            setPointTemperatura: novoValor.setPointTemperatura,
+            lampadaLigada: novoValor.lampadaLigada,
+            resetarEsp: novoValor.resetarEsp
+          }
+        }
+    }
+
     // Atualize o dado no MongoDB usando o valor da temperatura fornecido na URL
     await collection.updateOne(
       { _id: new ObjectId("6519ff35e98731875d3c7e89") }, // Filtre pelo ID do documento que você deseja atualizar
-      {
-        $set: {
-          setPointTemperatura: novoValor.setPointTemperatura,
-          lampadaLigada: novoValor.lampadaLigada,
-          resetarEsp: novoValor.resetarEsp
-        }
-      }
+      set
     );
 
     res.status(200).json({ mensagem: 'Set-Point alterado com sucesso' });
