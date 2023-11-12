@@ -103,7 +103,9 @@ app.put('/atualizar-dado', async (req, res) => {
         $set: {
           umidade: newSensorData.umidade,
           luminosidade: newSensorData.luminosidade,
-          temperatura: newSensorData.temperatura
+          temperatura: newSensorData.temperatura,
+          resetarEsp: newSensorData.resetarEsp,
+          lampadaLigada: newSensorData.lampadaLigada
         }
       }
     );
@@ -115,35 +117,6 @@ app.put('/atualizar-dado', async (req, res) => {
   }
 });
 
-// ...
-
-/*io.on('connection', (socket) => {
-  console.log('Cliente WebSocket conectado');
-
-  const database = client.db('test');
-  const movies = database.collection('test');
-  const changeStream = movies.watch();
-
-  changeStream.on('change', async (event) => {
-    // Quando houver uma alteração, busque novamente os dados
-    const allData = await movies.find().toArray();
-    console.log("Evendo de mudança acionado!");
-    console.log('Dados atualizados:', allData);
-
-
-    // Emita todos os dados atualizados para este cliente conectado
-    socket.emit('dadosAtualizados', allData);
-  });
-
-  // Ouça eventos de desconexão
-  socket.on('disconnect', () => {
-    console.log('Cliente WebSocket desconectado');
-  });
-});
-
-server.listen(port, () => {
-  console.log(`Servidor Express em execução na porta ${port}`);
-});*/
 server.listen(port, () => {
   console.log(`Servidor Express em execução na porta ${port}`);
 });
