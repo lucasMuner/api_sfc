@@ -49,11 +49,14 @@ async function connectToMongoDB() {
 connectToMongoDB();
 
 // Rota para buscar dados do MongoDB
+
+
+
 app.get('/dados', async (req, res) => {
   try {
     const database = client.db('test');
     const movies = database.collection('test');
-    const dados = await movies.findOne(); 
+    const dados = await movies.findOne();
     res.json(dados);
   } catch (err) {
     console.error('Erro ao buscar dados do MongoDB:', err);
@@ -65,51 +68,57 @@ app.put('/atualizar-set', async (req, res) => {
   try {
     const novoValor = req.body;
 
-    console.log(novoValor);
     const database = client.db('test');
     const collection = database.collection('test');
 
-    let set = {}
+    let set = {};
 
-    if(novoValor.setPointTemperatura === ""){
-        set = {
-          $set: {
-            lampadaLigada: novoValor.lampadaLigada,
-            resetarEsp: novoValor.resetarEsp
-          }
+    if (novoValor.setPointTemperatura === "") {
+      set = {
+        $set: {
+          lampadaLigada: novoValor.lampadaLigada,
+          resetarEsp: novoValor.resetarEsp
         }
-    }else{
-        set = {
-          $set: {
-            setPointTemperatura: novoValor.setPointTemperatura,
-            lampadaLigada: novoValor.lampadaLigada,
-            resetarEsp: novoValor.resetarEsp
-          }
+      };
+    } else {
+      set = {
+        $set: {
+          setPointTemperatura: novoValor.setPointTemperatura,
+          lampadaLigada: novoValor.lampadaLigada,
+          resetarEsp: novoValor.resetarEsp
         }
+      };
     }
 
-    // Atualize o dado no MongoDB usando o valor da temperatura fornecido na URL
-    await collection.updateOne(
-      { _id: new ObjectId("6519ff35e98731875d3c7e89") }, // Filtre pelo ID do documento que você deseja atualizar
+    const updateResult = await collection.updateOne(
+      { _id: new ObjectId("6519ff35e98731875d3c7e89") },
       set
     );
 
-    res.status(200).json({ mensagem: 'Set-Point alterado com sucesso' });
+    if (updateResult.modifiedCount > 0) {
+      const updatedData = await collection.findOne({ _id: new ObjectId("6519ff35e98731875d3c7e89") });
+      pusher.trigger("my-channel", "my-event", {
+        message: "Dados de sensores atualizados",
+        data: updatedData
+      });
+
+      res.status(200).json({ mensagem: 'Set-Point alterado com sucesso' });
+    } else {
+      res.status(304).json({ mensagem: 'Nenhum dado foi modificado' });
+    }
   } catch (error) {
     console.error('Ocorreu um erro ao atualizar o dado:', error);
     res.status(500).json({ erro: 'Ocorreu um erro ao atualizar o dado' });
   }
 });
 
-
 app.put('/atualizar-dado', async (req, res) => {
   try {
-    const newSensorData = req.body; // Obtenha os novos valores de umidade, luminosidade e temperatura do corpo da solicitação
+    const newSensorData = req.body;
 
     const database = client.db('test');
     const collection = database.collection('test');
 
-    // Atualize o documento no MongoDB usando o ID fornecido
     const updateResult = await collection.updateOne(
       { _id: new ObjectId("6519ff35e98731875d3c7e89") },
       {
@@ -122,23 +131,20 @@ app.put('/atualizar-dado', async (req, res) => {
         }
       }
     );
+
     if (updateResult.modifiedCount > 0) {
-      // Se os dados foram realmente atualizados, acione o evento do Pusher
+      const updatedData = await collection.findOne({ _id: new ObjectId("6519ff35e98731875d3c7e89") });
       pusher.trigger("my-channel", "my-event", {
-        message: "Dados de sensores atualizados"
+        message: "Dados de sensores atualizados",
+        data: updatedData
       });
 
       res.status(200).json({ mensagem: 'Dados de sensores atualizados com sucesso' });
     } else {
-      // Se nenhum dado foi modificado, retorne um status indicando que nada foi alterado
       res.status(304).json({ mensagem: 'Nenhum dado foi modificado' });
     }
   } catch (error) {
     console.error('Ocorreu um erro ao atualizar os dados dos sensores:', error);
     res.status(500).json({ erro: 'Ocorreu um erro ao atualizar os dados dos sensores' });
   }
-});
-
-server.listen(port, () => {
-  console.log(`Servidor Express em execução na porta ${port}`);
 });
