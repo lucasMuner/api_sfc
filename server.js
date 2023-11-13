@@ -85,13 +85,23 @@ app.put('/atualizar-set', async (req, res) => {
         }
     }
 
-    // Atualize o dado no MongoDB usando o valor da temperatura fornecido na URL
-    await collection.updateOne(
-      { _id: new ObjectId("6519ff35e98731875d3c7e89") }, // Filtre pelo ID do documento que você deseja atualizar
+    const updateResult = await collection.updateOne(
+      { _id: new ObjectId("6519ff35e98731875d3c7e89") },
       set
     );
 
-    res.status(200).json({ mensagem: 'Set-Point alterado com sucesso' });
+    if (updateResult.modifiedCount > 0) {
+      const updatedData = await collection.findOne({ _id: new ObjectId("6519ff35e98731875d3c7e89") });
+
+      pusher.trigger("my-channel", "my-event", {
+        message: "Dados de sensores atualizados",
+        data: updatedData
+      });
+
+      res.status(200).json({ mensagem: 'Set-Point alterado com sucesso' });
+    } else {
+      res.status(304).json({ mensagem: 'Nenhum dado foi modificado' });
+    }
   } catch (error) {
     console.error('Ocorreu um erro ao atualizar o dado:', error);
     res.status(500).json({ erro: 'Ocorreu um erro ao atualizar o dado' });
