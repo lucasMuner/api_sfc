@@ -110,8 +110,8 @@ app.put('/atualizar-dado', async (req, res) => {
     const collection = database.collection('test');
 
     // Atualize o documento no MongoDB usando o ID fornecido
-    await collection.updateOne(
-      { _id: new ObjectId("6519ff35e98731875d3c7e89") }, // Filtre pelo ID do documento que você deseja atualizar
+    const updateResult = await collection.updateOne(
+      { _id: new ObjectId("6519ff35e98731875d3c7e89") },
       {
         $set: {
           umidade: newSensorData.umidade,
@@ -122,12 +122,17 @@ app.put('/atualizar-dado', async (req, res) => {
         }
       }
     );
+    if (updateResult.modifiedCount > 0) {
+      // Se os dados foram realmente atualizados, acione o evento do Pusher
+      pusher.trigger("my-channel", "my-event", {
+        message: "Dados de sensores atualizados"
+      });
 
-    pusher.trigger("my-channel", "my-event", {
-  message: "Dados de sensores atualizados"
-});
-
-    res.status(200).json({ mensagem: 'Dados de sensores atualizados com sucesso' });
+      res.status(200).json({ mensagem: 'Dados de sensores atualizados com sucesso' });
+    } else {
+      // Se nenhum dado foi modificado, retorne um status indicando que nada foi alterado
+      res.status(304).json({ mensagem: 'Nenhum dado foi modificado' });
+    }
   } catch (error) {
     console.error('Ocorreu um erro ao atualizar os dados dos sensores:', error);
     res.status(500).json({ erro: 'Ocorreu um erro ao atualizar os dados dos sensores' });
