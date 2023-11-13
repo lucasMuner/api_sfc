@@ -123,6 +123,9 @@ app.put('/atualizar-dado', async (req, res) => {
       }
     );
 
+    pusher.trigger("my-channel", "my-event", {
+  message: "Dados de sensores atualizados"
+});
 
     res.status(200).json({ mensagem: 'Dados de sensores atualizados com sucesso' });
   } catch (error) {
