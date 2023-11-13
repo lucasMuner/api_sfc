@@ -3,7 +3,6 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const { ObjectId } = require('mongodb');
 const cors = require('cors');
 const http = require('http');
-const Pusher = require("pusher");
 //const socketIo = require('socket.io');
 
 const app = express();
@@ -11,15 +10,6 @@ const server = http.createServer(app);
 const port = 3000; 
 app.use(cors());
 app.use(express.json());
-
-
-const pusher = new Pusher({
-  appId: "1707229",
-  key: "c4239abe33d40b3e3149",
-  secret: "7d452fa1f08b5c8a6f54",
-  cluster: "sa1",
-  useTLS: true
-});
 
 
 // Conectar ao MongoDB
@@ -85,23 +75,15 @@ app.put('/atualizar-set', async (req, res) => {
         }
     }
 
-    const updateResult = await collection.updateOne(
+   await collection.updateOne(
       { _id: new ObjectId("6519ff35e98731875d3c7e89") },
       set
     );
 
-    if (updateResult.modifiedCount > 0) {
-      const updatedData = await collection.findOne({ _id: new ObjectId("6519ff35e98731875d3c7e89") });
-
-      pusher.trigger("my-channel", "my-event", {
-        message: "Dados de sensores atualizados",
-        data: updatedData
-      });
+   
 
       res.status(200).json({ mensagem: 'Set-Point alterado com sucesso' });
-    } else {
-      res.status(304).json({ mensagem: 'Nenhum dado foi modificado' });
-    }
+
   } catch (error) {
     console.error('Ocorreu um erro ao atualizar o dado:', error);
     res.status(500).json({ erro: 'Ocorreu um erro ao atualizar o dado' });
@@ -117,7 +99,7 @@ app.put('/atualizar-dado', async (req, res) => {
     const collection = database.collection('test');
 
     // Atualize o documento no MongoDB usando o ID fornecido
-    const updateResult = await collection.updateOne(
+    await collection.updateOne(
       { _id: new ObjectId("6519ff35e98731875d3c7e89") }, // Filtre pelo ID do documento que você deseja atualizar
       {
         $set: {
@@ -129,18 +111,7 @@ app.put('/atualizar-dado', async (req, res) => {
         }
       }
     );
-    if (updateResult.modifiedCount > 0) {
-      const updatedData = await collection.findOne({ _id: new ObjectId("6519ff35e98731875d3c7e89") });
-
-      pusher.trigger("my-channel", "my-event", {
-        message: "Dados de sensores atualizados",
-        data: updatedData
-      });
-
       res.status(200).json({ mensagem: 'Set-Point alterado com sucesso' });
-    } else {
-      res.status(304).json({ mensagem: 'Nenhum dado foi modificado' });
-    }
   } catch (error) {
     console.error('Ocorreu um erro ao atualizar os dados dos sensores:', error);
     res.status(500).json({ erro: 'Ocorreu um erro ao atualizar os dados dos sensores' });
