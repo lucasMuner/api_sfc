@@ -93,9 +93,6 @@ app.put('/atualizar-set', async (req, res) => {
       { _id: new ObjectId("6519ff35e98731875d3c7e89") }, // Filtre pelo ID do documento que você deseja atualizar
       set
     );
-    pusher.trigger("my-channel", "my-event", {
-      message: "Dados de sensores atualizados"
-    });
 
     res.status(200).json({ mensagem: 'Set-Point alterado com sucesso' });
   } catch (error) {
@@ -126,9 +123,6 @@ app.put('/atualizar-dado', async (req, res) => {
       }
     );
 
-    pusher.trigger("my-channel", "my-event", {
-      message: "Dados de sensores atualizados"
-    });
 
     res.status(200).json({ mensagem: 'Dados de sensores atualizados com sucesso' });
   } catch (error) {
