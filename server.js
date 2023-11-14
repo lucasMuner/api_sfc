@@ -62,7 +62,6 @@ app.put('/atualizar-set', async (req, res) => {
         set = {
           $set: {
             lampadaLigada: novoValor.lampadaLigada,
-            resetarEsp: novoValor.resetarEsp
           }
         }
     }else{
@@ -70,7 +69,6 @@ app.put('/atualizar-set', async (req, res) => {
           $set: {
             setPointTemperatura: novoValor.setPointTemperatura,
             lampadaLigada: novoValor.lampadaLigada,
-            resetarEsp: novoValor.resetarEsp
           }
         }
     }
